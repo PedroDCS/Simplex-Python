@@ -119,56 +119,62 @@ class simplexA():
 
         # Escolhe algum indice nao basico cujo custo reduzido e' negativo. Dentre os negativos, escolhe
         # o 'mais negativo'
-        JotaEscolhido  = -1
-        CustoEscolhido = 0#verificar se é isso mesmo --- CustoEscolhido <- Inf;
-
+        JotaEscolhido = -1
+        CustoEscolhido = numpy.inf
         for j in IndicesNaoBase:
             BB = []
             for i in A:
                 BB.append(i[j-1])
-
             print("BB")
             for i in BB:
                 print(i)
-            input()
+
             # Calcula a j-esima direcao factivel pelo produto -B^{-1}A_j, apenas para debug
-            #Direcao = -BMenosUm % * % A[, j];
+            MenosBmenosUm = numpy.dot(BMenosUm, -1)
+            Direcao = numpy.dot(MenosBmenosUm, BB)
+            print("j-esima direcao factivel")
+            for i in Direcao:
+                print(i)
 
-
-            input()
-        """
-        IndicesNaoBase = [2, 3, 5, 8, 10]
-        [1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
-        [1, 1, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0]
-        [0, 0, 0, 0, 1, 1, 0, -1, 0, 0, 0, 0]
-        [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0]
-        [1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0]
-        [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0]
-        [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1]
-        for(j in IndicesNaoBase)
-        {
             # Calcula o custo reduzido
-            Custo = c[j] - t(CustoBase) %*% BMenosUm %*% A[,j];
-        
+            Custo = c[j-1] - numpy.dot(numpy.transpose(CustoBase), numpy.dot(BMenosUm, BB))
+            print("Custo Reduzido", Custo)
+
             # Guarda um indice de direcao basica factivel com custo reduzido negativo, se houver
-            if(Custo < 0)
-            {
+            if Custo < 0:
                 # Verifica se a j-ésima direcao básica é a que contem o custo reduzido 'mais negativo'
-                if(Custo < CustoEscolhido)
-                {
+                if Custo < CustoEscolhido:
                     # Atualiza candidata a entrar na base
-                    JotaEscolhido  <- j;
-                    CustoEscolhido <- Custo;
-                }
-            }
+                    JotaEscolhido = j
+                    CustoEscolhido = Custo
 
             # Exibe a j-ésima direcao factivel (apenas para debug)
-            cat('\tDirecao Factivel', j, ', Custo Reduzido = ', Custo, '\n');
-            for(i in 1:m)
-            {
-                cat('\t\td_B[', IndicesBase[i], '] = ', Direcao[i], '\n');
-            }
-        }
+            print('\tDirecao Factivel', j, ', Custo Reduzido = ', Custo)
+            for i in range(m):
+                print('\t\td_B[', IndicesBase[i], '] = ', Direcao[i])
+
+        # Se nao encontrou nenhum indice com custo reduzido negativo, e' porque chegamos no otimo
+
+        if JotaEscolhido == -1:
+            # Exibe solucao ótima (apenas debug)
+            ValObjetivo = 0
+            for i in range(m):
+                ValObjetivo = ValObjetivo + CustoBase[i] * x[i]
+            print('\nObjetivo = ', ValObjetivo, '(encontrado na ', Iteracao, 'a. iteracao)')
+            Solucao = []
+            for i in range(n):
+                Solucao.append(0)
+            for i in range(m):
+                Solucao[IndicesBase[i]-1] = x[i]
+
+            for i in range(n):
+                print('x[', i, '] = ', Solucao[i])
+
+            print('\n\n\n');
+            pass
+
+        input()
+        """
 """
 
 
