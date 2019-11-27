@@ -50,10 +50,9 @@ class simplexA():
 
     # Laco principal da aplicacao: executa os 5 passos propostos por Bertsimas e Tsiksiklis para realizar
     # uma iteracao completa do método Simplex.
-    rodar = 1
-    while rodar == 1:
 
-# Passo 1: Calculando SBF inicial
+    repeat
+    # Passo 1: Calculando SBF inicial
         print('Iteracao # ', Iteracao)
         print('Indices Basicos   :')
         for i in IndicesBase:
@@ -172,10 +171,86 @@ class simplexA():
 
             print('\n\n\n');
             pass
+        # Exibe quem entra na base
+        print('\tVariavel Entra Base: x[', JotaEscolhido, ']\n')
+    ################################################################################################################
+    ################################################################################################################
+    ################################################################################################################
+    ################################################################################################################
+    ################################################################################################################
+    #
+    # Passo 3: Computa vetor u
+    #
+        # Não chegamos em uma solucao ótima ainda. Alguma variável básica deve sair da base para dar
+        # lugar a entrada de uma variável não básica. Computa 'u' para verificar se solucao é ilimitada
+        AJotaEscolhido = []
+        for i in A:
+            AJotaEscolhido.append(i[JotaEscolhido])
+        print("J Escolhido:")
+        for i in AJotaEscolhido:
+            print(i)
+        u = numpy.dot(BMenosUm, AJotaEscolhido)
 
-        input()
-        """
-"""
+        print("u")
+        for i in u:
+            print(i)
+        # Verifica se nenhum componente de u e' positivo
+        ExistePositivo = False
+        for i in range(m):
+            if u[i] > 0:
+                ExistePositivo = True
+
+        # Testa. Se não houver no vetor 'u' (sinal inverso da direcao factivel) nenhum componente
+        # positivo, é porque o valor ótimo é - infinito.
+        if ExistePositivo == False:
+            print('\n\nCusto Otimo = -Infinito')
+            rep = [numpy.inf, n]#verificar depois
+            print(rep)
+            exit()
+
+        #
+        # Passo 4: Determina o valor de Theta
+        #
+
+        # Chuta um valor alto para o theta, e vai reduzindo de acordo com a razao x_i / u_i
+        Theta = numpy.inf
+        IndiceL = -1
+
+        # Varre indices basicos determinando o valor de theta que garante factibilidade
+        for i in range(m):
+            # Calcula a razao
+            if u[i] > 0:
+                # Calcula a razao
+                Razao = x[i] / u[i]
+                # Atualiza a razao, pois encontramos um menor valor de theta
+                if Razao < Theta:
+                    Theta = Razao
+                    IndiceL = IndicesBase[i]
+
+        # Exibe variavel que irá deixar a base (apenas debug)
+        print('\tVariavel  Sai  Base: x[', IndiceL, '], Theta = ', Theta, '\n')
+    #
+    # Passo 5: Atualiza variável básica e não-básica
+    #
+
+        # Calcula novo valor da nao-basica, e atualiza base
+        for i in range(m):
+            # Se encontramos o L-ésimo indica da variável básica que deixará a base, substitui-a
+            # pela variável não-básica correspondente à j-ésima direção factível de redução de custo
+            if IndicesBase[i] == IndiceL:
+                x[i] = Theta
+                IndicesBase[i] = JotaEscolhido
+
+        # Para as demais variáveis não básicas, apenas atualiza o índice de quem saiu da base (e
+        # entrou no conjunto das não-básicas
+        for i in range(n-m):
+            if IndicesNaoBase[i] == JotaEscolhido:
+                IndicesNaoBase[i] = IndiceL
+
+    # Incrementa o numero da iteracao
+    Iteracao = Iteracao + 1
+    return x
+    input()
 
 
 if __name__ == "__main__":
