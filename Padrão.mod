@@ -6,7 +6,7 @@ var milhoPlantado >= 0; # Quantidade em toneladas de milho produzido
 var x >= 0;
 var y >= 0;
 
-minimize Custo: (350 * milhoComprado) + (milhoComprado * 100)) + (milhoPlantado * 145.73);
+minimize Custo: (350 * milhoComprado) + (milhoPlantado * 145.73);
 
 subject to
 
