@@ -1,4 +1,3 @@
-
 """
 A Matriz-
 o vetor de recursos 'b' de A-
@@ -9,30 +8,44 @@ numero de linhas de a-
 numero de colunas de a-
 Titulo do problema
 """
-from itertools import repeat
 import numpy
 from scipy import linalg
-import random
+
+# A = [[1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+#      [1, 1, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0],
+#      [0, 0, 0, 0, 1, 1, 0, -1, 0, 0, 0, 0],
+#      [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0],
+#      [1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+#      [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
+#      [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1]]  # Matrz
+#
+# b = [100000, 30000, 30000, 25000, 50000, 50000, 50000]
+# c = [-0.043, -0.037, -0.018, -0.028, -0.015, -0.024, 0, 0, 0, 0, 0, 0]
+# IndicesBase = [1, 4, 6, 7, 9, 11, 12]
+# IndicesNaoBase = [2, 3, 5, 8, 10]
+# m = 7  # Linhas de A
+# n = 12  # Colunas de A
+# Titulo = 'Carteira de Investimento [Corrar et al]'
+
+A = [[1, 0, 0, 1, 0, 0, 0, 0],
+     [0, 1, 0, 0, 1, 0, 0, 0],
+     [0, 0, 1, 0, 0, 1, 0, 0],
+     [1, 2, 0.5, 0, 0, 0, 1, 0],
+     [2.5, 1, 4, 0, 0, 0, 0, 1]]  # Matrz
+b = [3000, 2500, 500, 6000, 10000]
+c = [50, 90, 120, 65, 92, 140, 0, 0, 0]
+
+IndicesBase = [4, 5, 6, 7, 8]
+IndicesNaoBase = [1, 2, 3]
+
+m = 5  # Linhas de A
+n = 8  # Colunas de A
+
+Titulo = 'Produzir ou Comprar Motores [Lachtermarcher]'
 
 
-A = [[1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
-     [1, 1, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0],
-     [0, 0, 0, 0, 1, 1, 0, -1, 0, 0, 0, 0],
-     [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0],
-     [1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-     [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
-     [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1]]# Matrz
-
-b = [100000, 30000, 30000, 25000, 50000, 50000, 50000]
-c = [-0.043, -0.037, -0.018, -0.028, -0.015, -0.024, 0, 0, 0, 0, 0, 0]
-IndicesBase = [1, 4, 6, 7, 9, 11, 12]
-IndicesNaoBase = [2, 3, 5, 8, 10]
-m = 7#Linhas de A
-n = 12#Colunas de A
-Titulo = 'Carteira de Investimento [Corrar et al]'
-
-#A, b, c, IndicesBase, IndicesNaoBase, m, n, Titulo
-class simplexA():
+# A, b, c, IndicesBase, IndicesNaoBase, m, n, Titulo
+def simplexA():
     Iteracao = 0
     print("\t\t\tMatriz A")
 
@@ -50,9 +63,8 @@ class simplexA():
 
     # Laco principal da aplicacao: executa os 5 passos propostos por Bertsimas e Tsiksiklis para realizar
     # uma iteracao completa do método Simplex.
-
-    repeat
-    # Passo 1: Calculando SBF inicial
+    while 1:
+        # Passo 1: Calculando SBF inicial
         print('Iteracao # ', Iteracao)
         print('Indices Basicos   :')
         for i in IndicesBase:
@@ -67,12 +79,9 @@ class simplexA():
         for i in A:
             aux = []
             for j in IndicesBase:
-                aux.append(i[j-1])
+                aux.append(i[j - 1])
             B.append(aux)
         print("Matriz B")
-
-
-
 
         # Calcula a SBF inicial pelo produto da inversa de B com b
         bb = linalg.inv(B)
@@ -82,6 +91,7 @@ class simplexA():
             for j in i:
                 aux.append(float(j))
             BMenosUm.append(aux)
+
         x = numpy.dot(BMenosUm, b)
 
         # Exibe a inversa da base (apenas debug)
@@ -90,26 +100,25 @@ class simplexA():
             print(i)
         print("Matriz x:")
         # Exibe a solucao básica factível da iteração corrente, apenas variáveis básicas (apenas debug)
-        print('\tSBF # ', Iteracao, ':\n');
+        print('\tSBF # ', Iteracao, ':\n')
         for i in range(m):
             print('\t\tx[', IndicesBase[i], '] = ', x[i])
 
         # Exibe o valor da funcao objetivo
         Objetivo = 0
         for i in range(m):
-            #print(c[IndicesBase[i]-1])
-            Objetivo = Objetivo + c[IndicesBase[i]-1] * x[i]
+            # print(c[IndicesBase[i]-1])
+            Objetivo = Objetivo + c[IndicesBase[i] - 1] * x[i]
         print('\tObjetivo: ', Objetivo, '\n')
 
-
-# Passo 2: Calculando os custos reduzidos dos indices nao basicos
+        # Passo 2: Calculando os custos reduzidos dos indices nao basicos
 
         # Para cada indice nao base, calcula o custo reduzido correspondente
 
         # Vetor de custo basico, i.e., parte de c que está relacionado com as variáveis básicas atuais
         CustoBase = []
         for i in range(m):
-            CustoBase.append(c[IndicesBase[i]-1])
+            CustoBase.append(c[IndicesBase[i] - 1])
 
         # Exibe vetor de custo basico (apenas debug)
         print('\tCusto Basico')
@@ -123,7 +132,7 @@ class simplexA():
         for j in IndicesNaoBase:
             BB = []
             for i in A:
-                BB.append(i[j-1])
+                BB.append(i[j - 1])
             print("BB")
             for i in BB:
                 print(i)
@@ -136,7 +145,7 @@ class simplexA():
                 print(i)
 
             # Calcula o custo reduzido
-            Custo = c[j-1] - numpy.dot(numpy.transpose(CustoBase), numpy.dot(BMenosUm, BB))
+            Custo = c[j - 1] - numpy.dot(numpy.transpose(CustoBase), numpy.dot(BMenosUm, BB))
             print("Custo Reduzido", Custo)
 
             # Guarda um indice de direcao basica factivel com custo reduzido negativo, se houver
@@ -164,23 +173,24 @@ class simplexA():
             for i in range(n):
                 Solucao.append(0)
             for i in range(m):
-                Solucao[IndicesBase[i]-1] = x[i]
+                Solucao[IndicesBase[i] - 1] = x[i]
 
             for i in range(n):
                 print('x[', i, '] = ', Solucao[i])
 
-            print('\n\n\n');
-            pass
+            print('\n\n\n')
+            return x
         # Exibe quem entra na base
         print('\tVariavel Entra Base: x[', JotaEscolhido, ']\n')
-    ################################################################################################################
-    ################################################################################################################
-    ################################################################################################################
-    ################################################################################################################
-    ################################################################################################################
-    #
-    # Passo 3: Computa vetor u
-    #
+        ################################################################################################################
+        ################################################################################################################
+        ################################################################################################################
+        ################################################################################################################
+        ################################################################################################################
+
+        #
+        # Passo 3: Computa vetor u
+        #
         # Não chegamos em uma solucao ótima ainda. Alguma variável básica deve sair da base para dar
         # lugar a entrada de uma variável não básica. Computa 'u' para verificar se solucao é ilimitada
         AJotaEscolhido = []
@@ -204,7 +214,7 @@ class simplexA():
         # positivo, é porque o valor ótimo é - infinito.
         if ExistePositivo == False:
             print('\n\nCusto Otimo = -Infinito')
-            rep = [numpy.inf, n]#verificar depois
+            rep = [numpy.inf, n]  # verificar depois
             print(rep)
             exit()
 
@@ -229,9 +239,9 @@ class simplexA():
 
         # Exibe variavel que irá deixar a base (apenas debug)
         print('\tVariavel  Sai  Base: x[', IndiceL, '], Theta = ', Theta, '\n')
-    #
-    # Passo 5: Atualiza variável básica e não-básica
-    #
+        #
+        # Passo 5: Atualiza variável básica e não-básica
+        #
 
         # Calcula novo valor da nao-basica, e atualiza base
         for i in range(m):
@@ -243,12 +253,12 @@ class simplexA():
 
         # Para as demais variáveis não básicas, apenas atualiza o índice de quem saiu da base (e
         # entrou no conjunto das não-básicas
-        for i in range(n-m):
+        for i in range(n - m):
             if IndicesNaoBase[i] == JotaEscolhido:
                 IndicesNaoBase[i] = IndiceL
+        # Incrementa o numero da iteracao
+        Iteracao = Iteracao + 1
 
-    # Incrementa o numero da iteracao
-    Iteracao = Iteracao + 1
     return x
     input()
 
