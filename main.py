@@ -27,21 +27,46 @@ from scipy import linalg
 # n = 12  # Colunas de A
 # Titulo = 'Carteira de Investimento [Corrar et al]'
 
-A = [[1, 0, 0, 1, 0, 0, 0, 0],
-     [0, 1, 0, 0, 1, 0, 0, 0],
-     [0, 0, 1, 0, 0, 1, 0, 0],
-     [1, 2, 0.5, 0, 0, 0, 1, 0],
-     [2.5, 1, 4, 0, 0, 0, 0, 1]]  # Matrz
-b = [3000, 2500, 500, 6000, 10000]
-c = [50, 90, 120, 65, 92, 140, 0, 0, 0]
+# A = [[1, 0, 0, 1, 0, 0, 0, 0],
+#      [0, 1, 0, 0, 1, 0, 0, 0],
+#      [0, 0, 1, 0, 0, 1, 0, 0],
+#      [1, 2, 0.5, 0, 0, 0, 1, 0],
+#      [2.5, 1, 4, 0, 0, 0, 0, 1]]  # Matrz
+# b = [3000, 2500, 500, 6000, 10000]
+# c = [50, 90, 120, 65, 92, 140, 0, 0, 0]
+#
+# IndicesBase = [4, 5, 6, 7, 8]
+# IndicesNaoBase = [1, 2, 3]
+#
+# m = 5  # Linhas de A
+# n = 8  # Colunas de A
+#
+# Titulo = 'Produzir ou Comprar Motores [Lachtermarcher]'
 
-IndicesBase = [4, 5, 6, 7, 8]
-IndicesNaoBase = [1, 2, 3]
+# A = [[1, 0, 1, 0, 0],
+#      [0, 1, 0, 1, 0],
+#      [3, 2, 0, 0, 1]]  # Matrz
+# b = [4, 6, 18]
+# c = [-3, -5, 0, 0, 0]
+# IndicesBase = [3,2,5]
+# IndicesNaoBase = [1,4]
+#
+# m = 3  # Linhas de A
+# n = 5  # Colunas de A
+#
+# Titulo = 'Goldbarg (pag 104)'
 
-m = 5  # Linhas de A
-n = 8  # Colunas de A
+A = [[ 2, 1, 1, 0, 0],
+     [1, 1, 0, 1, 0],
+     [ 1, 0, 0, 0, 1]]  # Matrz
 
-Titulo = 'Produzir ou Comprar Motores [Lachtermarcher]'
+b = [100, 80, 40]
+c = [-3, -2, 0, 0, 0]
+IndicesBase = [3,4,5]
+IndicesNaoBase = [1,2]
+m = 3  # Linhas de A
+n = 5  # Colunas de A
+Titulo = '[Unifei]'
 
 
 # A, b, c, IndicesBase, IndicesNaoBase, m, n, Titulo
@@ -195,12 +220,11 @@ def simplexA():
         # lugar a entrada de uma variável não básica. Computa 'u' para verificar se solucao é ilimitada
         AJotaEscolhido = []
         for i in A:
-            AJotaEscolhido.append(i[JotaEscolhido])
+            AJotaEscolhido.append(i[JotaEscolhido-1])
         print("J Escolhido:")
         for i in AJotaEscolhido:
             print(i)
         u = numpy.dot(BMenosUm, AJotaEscolhido)
-
         print("u")
         for i in u:
             print(i)
@@ -236,7 +260,6 @@ def simplexA():
                 if Razao < Theta:
                     Theta = Razao
                     IndiceL = IndicesBase[i]
-
         # Exibe variavel que irá deixar a base (apenas debug)
         print('\tVariavel  Sai  Base: x[', IndiceL, '], Theta = ', Theta, '\n')
         #
